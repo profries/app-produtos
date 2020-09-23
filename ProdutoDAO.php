@@ -45,7 +45,7 @@ class ProdutoDAO {
             //E o fetch_props_late serve para chamar o construtor e depois atribuir 
             //os dados - do contrário, o PDO faz o inverso (ou seja, os valores seriam os do array)
             $listaProdutos = $stmt->fetchAll(
-                PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Produto', [0,'',0]);
+                PDO::FETCH_ASSOC|PDO::FETCH_PROPS_LATE);
             return $listaProdutos;
         }
         catch(PDOException $e)
