@@ -13,6 +13,10 @@ class ProdutoDAO {
             $this->pdo = new PDO("mysql:host=$servername;dbname=$databasename", $username, $password);
             // set the PDO error mode to exception
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);        
+            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES,false);
+            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
         }
         catch(PDOException $e)
         {
@@ -22,8 +26,7 @@ class ProdutoDAO {
 
     function inserir(Produto $produto){
         try{
-            $stmt = $this->pdo->prepare("INSERT INTO produtos (nome, preco)
-            VALUES (:nome, :preco)");
+            $stmt = $this->pdo->prepare("INSERT INTO produtos (nome, preco) VALUES (:nome, :preco)");
             $stmt->bindParam(':nome', $produto->getNome());
             $stmt->bindParam(':preco', $produto->getPreco());
             $stmt->execute();
@@ -59,7 +62,7 @@ class ProdutoDAO {
         $comando = $this->pdo->prepare($q);
         $comando->bindParam(":id", $id);
         $comando->execute();
-        $comando->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Produto', [0,'',0]);
+        $comando->setFetchMode(PDO::FETCH_ASSOC|PDO::FETCH_PROPS_LATE);
         $obj = $comando->fetch();
         return($obj);
     
